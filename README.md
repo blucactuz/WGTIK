@@ -1,0 +1,2 @@
+# WGTIK
+tugas wgtik (kerkel)
