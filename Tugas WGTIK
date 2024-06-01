@@ -11,21 +11,15 @@ function get_last_digit(plat) {
     }
 }
 
-// Fungsi untuk mengecek kendaraan yang harus ditilang berdasarkan tanggal dan rute
 function kenaRazia(date, data) {
-    // Lokasi Ganjil Genap
     const ganjil_genap_rute = ["Gajah Mada", "Hayam Wuruk", "Sisingamangaraja", "Panglima Polim", "Fatmawati", "Tomang Raya"];
 
     const tilang_info = {};
     for (const vehicle of data) {
-        // Hanya periksa untuk kendaraan tipe "Mobil"
         if (vehicle.type === "Mobil") {
-            // Periksa apakah tanggal berada dalam rentang yang valid
             if (date >= 1 && date <= 31) {
                 const last_digit = get_last_digit(vehicle.plat);
-                // Periksa apakah kendaraan harus ditilang berdasarkan rute dan nomor plat
                 for (const route of vehicle.rute) {
-                    // Jika rute termasuk dalam daftar Ganjil Genap dan nomor plat genap (atau ganjil), kendaraan harus ditilang
                     if (ganjil_genap_rute.includes(route) && (last_digit % 2 !== date % 2)) {
                         tilang_info[vehicle.name] = (tilang_info[vehicle.name] || 0) + 1;
                     }
@@ -33,8 +27,6 @@ function kenaRazia(date, data) {
             }
         }
     }
-
-    // Filter informasi tilang hanya untuk Toni dan Anna
     const tilang_info_filtered = {};
     for (const name in tilang_info) {
         if (name === "Toni" || name === "Anna") {
