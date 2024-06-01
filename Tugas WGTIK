@@ -1,117 +1,45 @@
-/
+def get_last_digit(plat):
+    # Ambil karakter terakhir dari nomor plat
+    last_char = plat[-1]
+    # Pastikan karakter terakhir adalah digit numerik
+    if last_char.isdigit():
+        return int(last_char)
+    else:
+        # Jika karakter terakhir bukan digit numerik, kembalikan 0
+        return 0
 
-function kenaRazia(date, data) {
+def kenaRazia(date, data):
+    # Lokasi Ganjil Genap
+    ganjil_genap_rute = ["Gajah Mada", "Hayam Wuruk", "Sisingamangaraja", "Panglima Polim", "Fatmawati", "Tomang Raya"]
 
-  function raziaGanjilGenap(tanggal, dataKendaraan) {
-    const lokasiGanjilGenap = ["Gajah Mada", "Hayam Wuruk", "Sisingamangaraja", "Panglima Polim", "Fatmawati", "Tomang Raya"];
-    const bulan = [...Array(31).keys()].map(i => i + 1); // Buat array tanggal dari 1 sampai 31
-    const raziaResult = {};
+    tilang_info = {}
+    for vehicle in data:
+        # Hanya periksa untuk kendaraan tipe "Mobil"
+        if vehicle["type"] == "Mobil":
+            # Periksa apakah tanggal berada dalam rentang yang valid
+            if 1 <= date <= 31:
+                last_digit = get_last_digit(vehicle["plat"])
+                # Periksa apakah kendaraan harus ditilang berdasarkan rute dan nomor plat
+                for route in vehicle["rute"]:
+                    # Jika rute termasuk dalam daftar Ganjil Genap dan nomor plat genap (atau ganjil), kendaraan harus ditilang
+                    if route in ganjil_genap_rute and (last_digit % 2 != date % 2):
+                        tilang_info[vehicle["name"]] = tilang_info.get(vehicle["name"], 0) + 1
 
-    if (bulan.includes(tanggal)) { // Periksa apakah tanggal valid
-        for (let i = 0; i < dataKendaraan.length; i++) {
-            const plat = dataKendaraan[i].split(' ')[1]; // Ambil nomor plat (misal: 'B 444 XXX')
-            const digitTerakhir = parseInt(plat[plat.length - 1]); // Ambil digit terakhir nomor plat
+    # Filter informasi tilang hanya untuk Toni dan Anna
+    tilang_info_filtered = {name: total_tilang for name, total_tilang in tilang_info.items() if name in ["Toni", "Anna"]}
+    return tilang_info_filtered
 
-            if (!isNaN(digitTerakhir) && digitTerakhir % 2 !== tanggal % 2 && dataKendaraan[i].includes('MOBIL')) { // Periksa pelanggaran
-                raziaResult[dataKendaraan[i]] = "Pelanggaran terdeteksi";
-            }
-        }
+#main
+vehicles = [
+    {"name": "Denver", "plat": "B 2791 KDS", "type": "Mobil", "rute": ["TB Simatupang", "Panglima Polim", "Depok", "Senen Raya"]},
+    {"name": "Toni", "plat": "B 1212 JBB", "type": "Mobil", "rute": ["Pintu Besar Selatan", "Panglima Polim", "Depok", "Senen Raya", "Kemang"]},
+    {"name": "Stark", "plat": "B 444 XSX", "type": "Motor", "rute": ["Pondok Indah", "Depok", "Senen Raya", "Kemang"]},
+    {"name": "Anna", "plat": "B 678 DD", "type": "Mobil", "rute": ["Fatmawati", "Panglima Polim", "Depok", "Senen Raya", "Kemang", "Gajah Mada"]}
+]
 
-        return raziaResult;
-    } else {
-        return "Tanggal tidak valid";
-    }
-}
+date = 27
+tilang_info = kenaRazia(date, vehicles)
 
-// Contoh pemanggilan fungsi
-const tanggalRazia = 15;
-const dataKendaraan = ["B 444 XXX", "D 777 YYY", "F 123 ABC", "G 890 DEF", "A 456 XYZ", "H 321 LMN"];
-
-console.log(raziaGanjilGenap(tanggalRazia, dataKendaraan));
-
-
-}
-
-console.log(
-
-  kenaRazia(27, [
-
-    {
-
-      name: "Denver",
-
-      plat: "B 2791 KDS",
-
-      type: "Mobil",
-
-      rute: ["TB Simatupang", "Panglima Polim", "Depok", "Senen Raya"]
-
-    },
-
-    {
-
-      name: "Toni",
-
-      plat: "B 1212 JBB",
-
-      type: "Mobil",
-
-      rute: [
-
-        "Pintu Besar Selatan",
-
-        "Panglima Polim",
-
-        "Depok",
-
-        "Senen Raya",
-
-        "Kemang"
-
-      ]
-
-    },
-
-    {
-
-      name: "Stark",
-
-      plat: "B 444 XSX",
-
-      type: "Motor",
-
-      rute: ["Pondok Indah", "Depok", "Senen Raya", "Kemang"]
-
-    },
-
-    {
-
-      name: "Anna",
-
-      plat: "B 678 DD",
-
-      type: "Mobil",
-
-      rute: [
-
-        "Fatmawati",
-
-        "Panglima Polim",
-
-        "Depok",
-
-        "Senen Raya",
-
-        "Kemang",
-
-        "Gajah Mada"
-
-      ]
-
-    }
-
-  ])
-
-);
-
-// [ { name: ‘Toni’, tilang: 1 }, { name: ‘Anna’, tilang: 3 } ]
+print("Detail kendaraan yang harus ditilang:")
+for name, total_tilang in tilang_info.items():
+    print(f"Nama: {name}, Total Tilang: {total_tilang}")
