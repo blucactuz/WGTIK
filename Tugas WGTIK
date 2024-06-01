@@ -1,12 +1,8 @@
-// Fungsi untuk mendapatkan digit terakhir dari nomor plat
 function get_last_digit(plat) {
-    // Ambil karakter terakhir dari nomor plat
     const last_char = plat.slice(-1);
-    // Pastikan karakter terakhir adalah digit numerik
     if (!isNaN(last_char)) {
         return parseInt(last_char);
     } else {
-        // Jika karakter terakhir bukan digit numerik, kembalikan 0
         return 0;
     }
 }
